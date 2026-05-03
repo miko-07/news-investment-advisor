@@ -163,12 +163,24 @@ launchctl start com.news.investment-advisor.review  # manual review
 launchctl bootout gui/$(id -u)/com.news.investment-advisor{,.review}  # remove
 ```
 
+## Email sending (`email_sender.py`)
+
+`send_email(subject, html_body, to_addr=None, md_file_path=None)` — sends via SMTP_SSL(465). Body contains both HTML and plain text (stripped via BeautifulSoup). Optionally attaches the source Markdown file with UTF-8 encoded filename. Raises on auth failure / timeout; caught by `main.py` callers.
+
+## Pre-flight validation
+
+`main.py:_check_config()` verifies `DEEPSEEK_API_KEY`, `SMTP_USER`, and `SMTP_PASSWORD` before any pipeline runs. If missing, logs an error and calls `exit(1)`.
+
+## Stock code extraction (`analyzer.py:extract_stock_codes`)
+
+Parses stock codes from the "推荐股票池" Markdown table (second column). Supported formats: `600519.SH`, `000001.SZ`, `00700.HK`, `AAPL` (bare US tickers). Regex: `\b(\d{5,6}\.(?:SH|SZ|HK|SS)|[A-Z]{1,5}(?:\.US)?)\b`, case-insensitive. Only parses within the table under the "六、推荐股票池" heading, stops at the next heading.
+
 ## Configuration
 
 - `.env` — secrets (DEEPSEEK_API_KEY, SMTP credentials). Never committed.
 - `.env.example` — template for above.
 - `config.py` — all tunable parameters: news source list, `NEWS_MAX_AGE_HOURS` (24h), fetch limits, AI model settings (temperature 0.3, model name), SMTP defaults.
-- `run.log` — execution log (auto-rotated at 5MB, 3 backups).
+- `run.log` — execution log in project root, auto-rotated at 5MB with 3 backups (`RotatingFileHandler`).
 - `output/` — contains `analysis_YYYYMMDD.md/.html` and `review_YYYYMMDD.md/.html`.
 
 ## Documentation
