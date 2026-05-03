@@ -372,7 +372,6 @@ def install_launchd():
 
     python = sys.executable
     main_py = str(BASE_DIR / "main.py")
-    log_file = str(LOG_FILE)
     plist_name = "com.news.investment-advisor"
     plist_path = Path.home() / f"Library/LaunchAgents/{plist_name}.plist"
 
@@ -387,8 +386,12 @@ def install_launchd():
     <key>ProgramArguments</key>
     <array>
         <string>{python}</string>
+        <string>-u</string>
         <string>{main_py}</string>
     </array>
+
+    <key>WorkingDirectory</key>
+    <string>{BASE_DIR}</string>
 
     <key>StartCalendarInterval</key>
     <dict>
@@ -398,12 +401,6 @@ def install_launchd():
         <integer>0</integer>
     </dict>
 
-    <key>StandardOutPath</key>
-    <string>{log_file}</string>
-
-    <key>StandardErrorPath</key>
-    <string>{log_file}</string>
-
     <key>RunAtLoad</key>
     <false/>
 </dict>
@@ -412,7 +409,6 @@ def install_launchd():
     logger.info("安装 macOS launchd 定时任务（每天早 7:00）...")
     logger.info(f"  Python:    {python}")
     logger.info(f"  主程序:    {main_py}")
-    logger.info(f"  日志:      {log_file}")
     logger.info(f"  plist:     {plist_path}")
 
     # 写入 plist
@@ -431,7 +427,6 @@ def install_launchd():
         logger.info("  查看状态: launchctl list | grep news")
         logger.info("  手动触发: launchctl start com.news.investment-advisor")
         logger.info(f"  卸载任务: launchctl bootout gui/$(id -u)/com.news.investment-advisor")
-        logger.info(f"  日志文件: {LOG_FILE}")
     except subprocess.CalledProcessError as e:
         logger.error(f"launchd 加载失败: {e.stderr}")
         logger.info(f"plist 文件已写入 {plist_path}，请手动加载:")
@@ -446,7 +441,6 @@ def install_launchd_review():
 
     python = sys.executable
     main_py = str(BASE_DIR / "main.py")
-    log_file = str(LOG_FILE)
     plist_name = "com.news.investment-advisor.review"
     plist_path = Path.home() / f"Library/LaunchAgents/{plist_name}.plist"
 
@@ -461,9 +455,13 @@ def install_launchd_review():
     <key>ProgramArguments</key>
     <array>
         <string>{python}</string>
+        <string>-u</string>
         <string>{main_py}</string>
         <string>--closing-review</string>
     </array>
+
+    <key>WorkingDirectory</key>
+    <string>{BASE_DIR}</string>
 
     <key>StartCalendarInterval</key>
     <array>
@@ -509,12 +507,6 @@ def install_launchd_review():
         </dict>
     </array>
 
-    <key>StandardOutPath</key>
-    <string>{log_file}</string>
-
-    <key>StandardErrorPath</key>
-    <string>{log_file}</string>
-
     <key>RunAtLoad</key>
     <false/>
 </dict>
@@ -523,7 +515,6 @@ def install_launchd_review():
     logger.info("安装 macOS launchd 定时任务（交易日 15:10 复盘推送）...")
     logger.info(f"  Python:    {python}")
     logger.info(f"  主程序:    {main_py} --closing-review")
-    logger.info(f"  日志:      {log_file}")
     logger.info(f"  plist:     {plist_path}")
 
     # 写入 plist
@@ -542,7 +533,6 @@ def install_launchd_review():
         logger.info("  查看状态: launchctl list | grep news")
         logger.info("  手动触发: launchctl start com.news.investment-advisor.review")
         logger.info(f"  卸载任务: launchctl bootout gui/$(id -u)/com.news.investment-advisor.review")
-        logger.info(f"  日志文件: {LOG_FILE}")
     except subprocess.CalledProcessError as e:
         logger.error(f"launchd 加载失败: {e.stderr}")
         logger.info(f"plist 文件已写入 {plist_path}，请手动加载:")

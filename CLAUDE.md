@@ -138,8 +138,6 @@ Fetches real-time A/HK/US stock quotes from 新浪财经 API (`hq.sinajs.cn`). A
 
 ## WeChat HTML formatting (`formatter.py`)
 
-## WeChat HTML formatting (`formatter.py`)
-
 Custom Markdown→HTML converter (not a library). Handles: h1-h3, bold/italic, code, fenced code blocks, escaped chars, lists with multi-line item support (indented continuations), blockquotes, horizontal rules, links, and Markdown tables. Output has inline CSS for WeChat Official Account paste and email clients. Weekly recurring "weekly digest" placeholder exists for special formatting.
 
 ## Report viewer (`viewer.py`)
@@ -172,6 +170,13 @@ launchctl bootout gui/$(id -u)/com.news.investment-advisor{,.review}  # remove
 - `config.py` — all tunable parameters: news source list, `NEWS_MAX_AGE_HOURS` (24h), fetch limits, AI model settings (temperature 0.3, model name), SMTP defaults.
 - `run.log` — execution log (auto-rotated at 5MB, 3 backups).
 - `output/` — contains `analysis_YYYYMMDD.md/.html` and `review_YYYYMMDD.md/.html`.
+
+## Documentation
+
+- `README.md` — Chinese documentation (default)
+- `README.en.md` — English documentation
+- `docs/investment-advisor-prd.md` — full PRD in Chinese
+- `CLAUDE.md` — this file
 
 ## Timezone convention
 
